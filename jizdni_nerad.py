@@ -10,10 +10,14 @@ TZ = ZoneInfo("Europe/Prague")
 st.set_page_config(page_title="Jízdní neřád")
 st.title("Jízdní neřád")
 
+stops_from_url = st.query_params.get_all("zastavka")
+
 stops = st.text_input(
     "Zastávky oddělěné středníkem",
-    value="Divadlo Gong;Ocelářská;Českomoravská",
-)
+    value=";".join(stops_from_url) or "Divadlo Gong;Ocelářská",
+).split(";")
+
+st.query_params["zastavka"] = stops
 
 now = datetime.datetime.now(TZ)
 
@@ -25,7 +29,7 @@ time_from = datetime.datetime.combine(date, time).replace(tzinfo=ZoneInfo("Europ
 raw_data = requests.get(
     "https://api.golemio.cz/v2/pid/departureboards",
     params={
-        "names": stops.split(";"),
+        "names": stops,
         "timeFrom": time_from.isoformat(),
         "minutesAfter": "30",
         "limit": "1000",
