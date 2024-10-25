@@ -17,9 +17,8 @@ stops = st.text_input(
     value=";".join(stops_from_url) or "Divadlo Gong;Ocelářská",
 ).split(";")
 
-st.query_params["zastavka"] = stops
-
 now = datetime.datetime.now(TZ)
+now = now - datetime.timedelta(minutes=now.minute % 5, seconds=now.second, microseconds=now.microsecond)
 
 date = st.date_input("Datum odjezdu", value=now.date(), format="DD.MM.YYYY")
 time = st.time_input("Čas odjezdu", value=now.time(), step=5*60)
