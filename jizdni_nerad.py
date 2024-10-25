@@ -5,6 +5,8 @@ import datetime
 from zoneinfo import ZoneInfo
 from urllib.parse import unquote
 
+TZ = ZoneInfo("Europe/Prague")
+
 st.set_page_config(page_title="Jízdní neřád")
 st.title("Jízdní neřád")
 
@@ -13,8 +15,10 @@ stops = st.text_input(
     value="Divadlo Gong;Ocelářská;Českomoravská",
 )
 
-date = st.date_input("Datum odjezdu")
-time = st.time_input("Čas odjezdu")
+now = datetime.datetime.now(TZ)
+
+date = st.date_input("Datum odjezdu", value=now.date(), format="DD.MM.YYYY")
+time = st.time_input("Čas odjezdu", value=now.time(), step=5*60)
 
 time_from = datetime.datetime.combine(date, time).replace(tzinfo=ZoneInfo("Europe/Prague"))
 
